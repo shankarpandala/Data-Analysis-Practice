@@ -2,7 +2,7 @@
 title: "Exploring one Variable"
 author: "Shankar"
 date: "October 1, 2016"
-output: github_document
+output: html_document
 ---
 
 This is an R Markdown document that I used to learn Data Analysis from udacity which explorees one variable
