@@ -43,14 +43,32 @@ by(fbdata$friend_count,fbdata$gender, summary)
 ```
 
 Scaling and Transoforming variabels
-```{r,`echo = FALSE`}
+```{r}
 p1= qplot(friend_count,data=subset(fbdata,!is.na(gender)))+facet_wrap(~gender)
 p2= p1 + scale_x_log10() +xlab("Log Transformed")
 p3=p1+ scale_x_sqrt() + xlab("squared")
 library(gridExtra)
 grid.arrange(p1,p2,p3, ncol=1)
+```
+Freequency ploygons
+
+```{r}
+ggplot(aes(x = friend_count, y = ..count../sum(..count..)), data = subset(fbdata, !is.na(gender))) + 
+  geom_freqpoly(aes(color = gender), binwidth=10) + 
+  scale_x_continuous(limits = c(0, 1000), breaks = seq(0, 1000, 50)) + 
+  xlab('Friend Count') + 
+  ylab('Percentage of users with that friend count')
 
 ```
+
+
+```{r}
+ggplot(aes(x = www_likes, y = ..count../sum(..count..)), data = subset(fbdata, !is.na(gender))) + 
+  geom_freqpoly(aes(color = gender)) + 
+  scale_x_log10()
+
+```
+
 
 Summary of Suedo facebook data
 
