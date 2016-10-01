@@ -1,0 +1,61 @@
+---
+title: "Exploring one Variable"
+author: "Shankar"
+date: "October 1, 2016"
+output: html_document
+---
+
+This is an R Markdown document that I used to learn Data Analysis from udacity which explorees one variable
+
+
+```{r}
+fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseudo_facebook.tsv", sep = '\t')
+
+```
+
+Histogram of birthdays
+```{r}
+library(ggplot2)
+names(fbdata)
+
+qplot(dob_day,data = fbdata) +
+  scale_x_discrete(breaks= 1:31) +
+  facet_wrap(~dob_month, ncol=3)
+```
+
+Friend count by gender
+```{r}
+#qplot(friend_count, data=fbdata, xlim = c(0,1000))
+
+qplot(friend_count, data=subset(fbdata,!is.na(gender)), binwidth=25)+
+  scale_x_continuous(limits=c(0,1000), breaks= seq(0,1000,50))+
+  facet_wrap(~gender)
+```
+Table of gender count
+
+```{r}
+table(fbdata$gender)
+```
+summary of friend count by gender
+```{r}
+by(fbdata$friend_count,fbdata$gender, summary)
+
+```
+
+Scaling and Transoforming variabels
+```{r}
+p1= qplot(friend_count,data=subset(fbdata,!is.na(gender)))+facet_wrap(~gender)
+p2= p1 + scale_x_log10() +xlab("Log Transformed")
+p3=p1+ scale_x_sqrt() + xlab("squared")
+library(gridExtra)
+grid.arrange(p1,p2,p3, ncol=1)
+
+```
+
+Summary of Suedo facebook data
+
+```{r}
+summary(fbdata)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
