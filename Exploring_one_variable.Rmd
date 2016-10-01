@@ -43,7 +43,7 @@ by(fbdata$friend_count,fbdata$gender, summary)
 ```
 
 Scaling and Transoforming variabels
-```{r}
+```{r,`echo = FALSE`}
 p1= qplot(friend_count,data=subset(fbdata,!is.na(gender)))+facet_wrap(~gender)
 p2= p1 + scale_x_log10() +xlab("Log Transformed")
 p3=p1+ scale_x_sqrt() + xlab("squared")
