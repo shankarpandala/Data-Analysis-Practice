@@ -1,0 +1,129 @@
+---
+title: "Exploring many variaables"
+author: "Shankar"
+date: "October 2, 2016"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseudo_facebook.tsv", sep = '\t')
+
+pf.fc_by_age <- fbdata %>%
+  group_by(age) %>%
+  summarise(friend_count_mean= mean(friend_count),
+                          friend_count_median= median(friend_count),
+                          n=n())%>%
+  arrange(age)
+head(pf.fc_by_age)
+
+
+```
+
+
+
+
+```{r, echo=FALSE}
+fbdata$year_joined <- floor(2014 - fbdata$tenure/365)
+summary(fbdata$year_joined)
+
+table(fbdata$year_joined)
+fbdata$year_joined.bucket <- cut(fbdata$year_joined,c(2004,2009,2011,2012,2014))
+
+
+ggplot(aes(x = age, y = friend_count), 
+              data = subset(fbdata, !is.na(gender))) + 
+  geom_line(aes(color = year_joined.bucket), stat = 'summary', fun.y = median)
+```
+
+friendship rate by tenure
+```{r}
+
+ggplot(aes(x=tenure, y= friendships_initiated/tenure),
+       data=subset(fbdata, tenure >=1))+
+  geom_line(aes(color= year_joined.bucket), stat = 'summary', fun.y=mean)
+
+
+ggplot(aes(x=90*round(tenure/90), y= friendships_initiated/tenure),
+       data=subset(fbdata, tenure >=1))+
+  geom_line(aes(color= year_joined.bucket), stat = 'summary', fun.y=mean)
+
+ggplot(aes(x=tenure, y= friendships_initiated/tenure),
+       data=subset(fbdata, tenure >=1))+
+  geom_smooth(aes(color= year_joined.bucket))
+
+```
+
+Yogurt data set
+
+```{r}
+yo=read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/yogurt.csv")
+
+yo <- transform(yo, all.purchases=strawberry+blueberry+pina.colada+
+                  plain+mixed.berry)
+
+```
+
+
+looping of plots
+
+```{r}
+set.seed(4231)
+yo$id <- as.factor(yo$id)
+sample.ids <- sample(levels(yo$id),16)
+
+
+ggplot(aes(x=time, y= price), data = subset(yo, id %in% sample.ids))+
+  facet_wrap(~id)+
+  geom_line()+
+  geom_point(aes(size=all.purchases), pch=1)
+
+```
+
+looping plots for categorical variables
+Scatterplot matrix
+
+```{r}
+library(GGally)
+theme_set(theme_minimal(20))
+
+set.seed(1836)
+pf_subset <- fbdata[,c(2:15)]
+names(pf_subset)
+ggpairs(pf_subset[sample.int(nrow(pf_subset),1000),])
+
+```
+
+Genes 
+Creating a heat map
+```{r}
+library(reshape2)
+nci <- read.table("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/nci.tsv")
+
+nci.long.samp <- melt(as.matrix(nci[1:200,]))
+names(nci.long.samp) <- c('gene', 'case','value')
+head(nci.long.samp)
+
+ggplot(aes(x=case, y=gene, fill=value),
+       data=nci.long.samp)+
+  geom_tile()+
+  scale_fill_gradientn(colours=colorRampPalette(c('blue', 'red'))(100))
+
+```
+
+
+Problem set solutions
+```{r}
+data(diamonds)
+
+ggplot(aes(x=color, y=price), data=diamonds)+
+  geom_histogram()
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,146 @@
+---
+title: "Exploring Two Variabales"
+author: "Shankar"
+date: "October 1, 2016"
+output: html_document
+---
+
+
+
+```{r}
+library(ggplot2)
+fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseudo_facebook.tsv", sep = '\t')
+```
+
+scatter plot  of age and friend count
+
+```{r}
+ggplot(aes(x=age,y=friend_count), data = subset(fbdata,!is.na(gender)))+geom_point()+
+  xlim(13,90)
+
+ggplot(aes(x=age,y=friend_count), data = subset(fbdata,!is.na(gender)))+geom_jitter(alpha= 1/20)+
+  xlim(13,90)
+
+ggplot(aes(x=age,y=friend_count), data = subset(fbdata,!is.na(gender)))+geom_point(alpha= 1/20)+
+  xlim(13,90)+ coord_trans(y = "sqrt")
+
+```
+Friendship initiated
+
+```{r}
+
+ggplot(aes(x=age,y=friendships_initiated), data= fbdata)+
+  geom_point(alpha= 1/10, position = position_jitter(h=0))+
+  coord_trans(y='sqrt')
+```
+
+Conditional means using dplyr
+filter()
+group_by()
+mutate()
+arrange()
+
+```{r}
+library(dplyr)
+age_groups <- group_by(fbdata,age)
+fc.fc_by_age <- summarise(age_groups,
+                          friend_count_mean= mean(friend_count),
+                          friend_count_median= median(friend_count),
+                          n=n())
+
+fc.fc_by_age<- arrange(fc.fc_by_age,age)
+head(fc.fc_by_age)
+
+pf.fc_by_age <- fbdata %.%
+  group_by(age) %.%
+  summarise(friend_count_mean= mean(friend_count),
+                          friend_count_median= median(friend_count),
+                          n=n())%.%
+  arrange(age)
+head(pf.fc_by_age)
+
+ggplot(aes(x=age,y=friend_count_mean), data =pf.fc_by_age) +geom_line()
+
+```
+Overlaying summaries
+```{r}
+ggplot(aes(x=age, y=friend_count),data= fbdata)+
+  xlim(13,90)+
+  geom_point(alpha=0.05, position = position_jitter(h=0),
+             color='red')+
+  coord_trans(y='sqrt')+
+  geom_line(stat = 'summary', fun.y= mean)+
+  geom_line(stat = 'summary', fun.y= quantile, probs=0.1,
+            linetype= 2, color= 'blue')+
+  geom_line(stat = 'summary', fun.y= quantile, probs=0.5,
+            color= 'blue')+
+  geom_line(stat = 'summary', fun.y= quantile, probs=0.9,
+            linetype= 2, color= 'blue')+
+  geom_line(stat = 'summary', fun.y= median, probs=0.1,
+            linetype= 2, color= 'yellow')
+
+
+```
+
+Correlation
+
+```{r}
+ggplot(aes(x=www_likes_received, y=likes_received), data = fbdata)+
+  geom_point()+
+  xlim(0,quantile(fbdata$www_likes_received,0.95))+
+  ylim(0, quantile(fbdata$likes_received,0.95))+
+  geom_smooth(method='lm',color='red')
+cor.test(fbdata$likes_received,fbdata$www_likes_received)
+```
+
+Caution with correlation
+
+```{r}
+library(alr3)
+data(Mitchell)
+summary(Mitchell)
+ggplot(aes(x=Month,y=Temp), data=Mitchell)+
+  geom_point()+
+  scale_x_discrete(breaks= seq(0,203,12))
+```
+
+Test
+```{r}
+data(diamonds)
+ggplot(aes(x=price,y=x),data=diamonds)+
+  geom_point()
+
+ggplot(aes(x=price,y=depth),data=diamonds)+
+  geom_point()
+
+
+ggplot(aes(x=price,y=carat),data=diamonds)+
+  geom_point()+
+  xlim(0, quantile(diamonds$price,0.99))+
+  ylim(0,quantile(diamonds$carat,0.99))
+
+volume = diamonds$x*diamonds$y*diamonds$z
+
+ggplot(aes(x=price,y=volume),data=diamonds)+
+  geom_point()+
+  geom_smooth(method='lm')
+```
+
+
+diamondsByClarity
+```{r}
+diamondsByClarity <- diamonds %.%
+  group_by(clarity)%.%
+  summarise(mean_price= mean(price),
+            median_price=median(price),
+            min_price= min(price),
+            max_price=max(price),
+            n=n())%.%
+  arrange(clarity)
+diamondsByClarity
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -71,6 +71,16 @@ ggplot(aes(x = www_likes, y = ..count../sum(..count..)), data = subset(fbdata, !
 
 ```
 
+Box plot of friend count by gender
+outliers are 1.5 times IQR
+```{r}
+qplot(x=gender,y= friend_count,data = subset(fbdata,!is.na(gender)),
+      geom = 'boxplot', ylim = c(0,1000))
+
+qplot(x=gender,y= friend_count,data = subset(fbdata,!is.na(gender)),
+      geom = 'boxplot')+ coord_cartesian(ylim = c(0,1000))
+```
+
 
 Summary of Suedo facebook data
 
