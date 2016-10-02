@@ -17,6 +17,7 @@ fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseu
 
 Histogram of birthdays
 ```{r}
+knitr::opts_chunk$set(fig.path = "README_figs/README-")
 library(ggplot2)
 names(fbdata)
 

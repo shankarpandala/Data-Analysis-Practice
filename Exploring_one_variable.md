@@ -13,6 +13,7 @@ fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseu
 Histogram of birthdays
 
 ```r
+knitr::opts_chunk$set(fig.path = "README_figs/README-")
 library(ggplot2)
 names(fbdata)
 ```
@@ -47,7 +48,7 @@ qplot(friend_count, data=subset(fbdata,!is.na(gender)), binwidth=25)+
   facet_wrap(~gender)
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-3-1.png) 
+![](README_figs/README-unnamed-chunk-3-1.png) 
 Table of gender count
 
 
@@ -95,7 +96,7 @@ grid.arrange(p1,p2,p3, ncol=1)
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-6-1.png) 
+![](README_figs/README-unnamed-chunk-6-1.png) 
 Freequency ploygons
 
 
@@ -115,7 +116,7 @@ ggplot(aes(x = friend_count, y = ..count../sum(..count..)), data = subset(fbdata
 ## Warning: Removed 2 rows containing missing values (geom_path).
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-7-1.png) 
+![](README_figs/README-unnamed-chunk-7-1.png) 
 
 
 
@@ -129,7 +130,7 @@ ggplot(aes(x = www_likes, y = ..count../sum(..count..)), data = subset(fbdata, !
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-8-1.png) 
+![](README_figs/README-unnamed-chunk-8-1.png) 
 
 Box plot of friend count by gender
 outliers are 1.5 times IQR
@@ -143,14 +144,14 @@ qplot(x=gender,y= friend_count,data = subset(fbdata,!is.na(gender)),
 ## Warning: Removed 2949 rows containing non-finite values (stat_boxplot).
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-9-1.png) 
+![](README_figs/README-unnamed-chunk-9-1.png) 
 
 ```r
 qplot(x=gender,y= friend_count,data = subset(fbdata,!is.na(gender)),
       geom = 'boxplot')+ coord_cartesian(ylim = c(0,1000))
 ```
 
-![](Exploring_one_variable_files/figure-html/unnamed-chunk-9-2.png) 
+![](README_figs/README-unnamed-chunk-9-2.png) 
 
 
 Summary of Suedo facebook data
