@@ -2,12 +2,15 @@
 title: "Exploring Two Variabales"
 author: "Shankar"
 date: "October 1, 2016"
-output: html_document
+output:  
+  html_document:
+    keep_md: true
 ---
 
 
 
 ```{r}
+knitr::opts_chunk$set(fig.path = "README_figs/README-")
 library(ggplot2)
 fbdata <- read.csv("https://s3.amazonaws.com/udacity-hosted-downloads/ud651/pseudo_facebook.tsv", sep = '\t')
 ```
